@@ -1,5 +1,7 @@
 <?php
 
+require_once '../vendor/autoload.php';
+
 use Uenoryo\Awsps\Config;
 use Uenoryo\Awsps\Client;
 
