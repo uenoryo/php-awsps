@@ -13,6 +13,9 @@ class Config
     /* @var path */
     public $path = '/';
 
+    /* @var export type */
+    public $exportType = '';
+
     public static function new()
     {
         return new Self;

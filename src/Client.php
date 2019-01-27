@@ -38,7 +38,7 @@ class Client
         ]);
         $client->path = $config->path;
         $client->validateSelf();
-        $client->expoter = new Json;
+        $client->setExpoter($config->exportType);
         return $client;
     }
 
@@ -74,9 +74,33 @@ class Client
         return $this;
     }
 
+    /**
+     * $param を $exporterを使用して変換し、返す.
+     *
+     * @return mixed
+     */
     public function export()
     {
         return $this->expoter->export($this->params);
+    }
+
+    /**
+     * $type の $exporter をセットする.
+     *
+     * @param $type string
+     *
+     * @return Uenoryo\Awsps\Client
+     */
+    public function setExpoter(string $type)
+    {
+        switch (true) {
+            case $type === 'json' || $type === 'Json':
+                $this->expoter = new Json;
+                break;
+            default:
+                throw new Exception("Invalid export type:'{$type}'");
+        }
+        return $this;
     }
 
     /**
