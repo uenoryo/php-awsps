@@ -41,9 +41,9 @@ class ClientTest extends TestCase
 
         foreach ($tests as $t) {
         	$client = Client::new($t['input']());
-        	$this->assertSame($client->ssmClient->getRegion(), $t['expect']['region'], $t['title']);
+        	$this->assertSame($t['expect']['region'], $client->ssmClient->getRegion(), $t['title']);
 
-        	$this->assertSame($client->path, $t['expect']['path'], $t['title']);
+        	$this->assertSame($t['expect']['path'], $client->path, $t['title']);
 
         	$this->assertNotNull($client->exporter, $t['title']);
         }
@@ -79,7 +79,7 @@ class ClientTest extends TestCase
         			$client = $t['init']();
         			$client->validateSelf();
         		} catch (Exception $e) {
-        			$this->assertSame(Exception::class, $t['error']);
+        			$this->assertSame($t['error'], get_class($e));
         		}
         		continue;
         	}
@@ -125,13 +125,13 @@ class ClientTest extends TestCase
         		try {
         			$client->setExporter($t['input']);
         		} catch (Exception $e) {
-        			$this->assertSame(Exception::class, $t['error']);
+        			$this->assertSame($t['error'], get_class($e));
         		}
         		continue;
         	}
 
         	$client->setExporter($t['input']);
-        	$this->assertSame(get_class($client->exporter), $t['expect'], $t['title']);
+        	$this->assertSame($t['expect'], get_class($client->exporter), $t['title']);
         }
     }
 
@@ -156,7 +156,7 @@ class ClientTest extends TestCase
         	$client->fetch();
         	$result = $client->params;
 
-        	$this->assertSame(count($result), count($t['expect']), $t['title']);
+        	$this->assertSame(count($t['expect']), count($result), $t['title']);
         }
     }
 }
