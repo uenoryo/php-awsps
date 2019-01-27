@@ -2,8 +2,6 @@
 
 namespace Uenoryo\Awsps;
 
-require '../vendor/autoload.php';
-
 use Uenoryo\Awsps\Expoter\Plain;
 use Uenoryo\Awsps\Expoter\Json;
 use Aws\Ssm\SsmClient;

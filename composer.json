@@ -4,5 +4,12 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Uenoryo\\Awsps\\": "src/",
+            "Uenoryo\\Awsps\\Exporter\\": "src/Exporter/",
+            "Uenoryo\\Awsps\\Test\\": "tests/"
+        }
     }
 }
