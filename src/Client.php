@@ -15,8 +15,8 @@ class Client
     /* @var 取得先のパス */
     public $path;
 
-    /* @var パラメータをキャッシュする用 */
-    public $paramArray = [];
+    /* @var パラメータ */
+    public $params = [];
 
     /**
      * $config を読み込み、 Client を初期化して返す.
@@ -50,7 +50,7 @@ class Client
     }
 
     /**
-     * パラメータを取得し、paramArray にセットする.
+     * パラメータを取得し、params にセットする.
      *
      * @return Uenoryo\Awsps\Client
      */
@@ -61,18 +61,32 @@ class Client
                 'Path'      => $this->path,
                 'Recursive' => true,
             ]);
-            $this->paramArray = $response->toArray()['Parameters'];
+            $paramsArray = $response->toArray()['Parameters'];
+            $this->params = $this->newParamsFromArray($paramsArray);
         } catch (Exception $e) {
             throw new Exception(sprintf('Fetch parameter failed, error: %s', $e->getMessage()));
         }
         return $this;
     }
 
+    /**
+     * AWSからのレスポンスから$paramsを初期化して返す.
+     *
+     * @return array
+     */
     protected function newParamsFromArray($paramArray)
     {
         $res = [];
         foreach ($paramArray as $data) {
             $param = new Param;
+            $param->name             = $data['Name'] ?? '';
+            $param->type             = $data['Type'] ?? '';
+            $param->value            = $data['Value'] ?? '';
+            $param->version          = $data['Version'] ?? '';
+            $param->lastModifiedDate = $data['lastModifiedDate'] ?? '';
+            $param->arn              = $data['Arn'] ?? '';
+            $res[] = $param;
         }
+        return $res;
     }
 }
