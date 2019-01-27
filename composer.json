@@ -1,4 +1,12 @@
 {
+    "name": "uenoryo/php-awsps",
+    "type": "library",
+    "authors": [
+        {
+            "name": "ryoueno",
+            "email": "p@uenoryo.com"
+        }
+    ],
     "require": {
         "aws/aws-sdk-php": "^3.87"
     },
