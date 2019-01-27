@@ -5,6 +5,7 @@ namespace Uenoryo\Awsps\Test;
 use PHPUnit\Framework\TestCase;
 use Uenoryo\Awsps\Config;
 use Uenoryo\Awsps\Client;
+use Exception;
 
 class ClientTest extends TestCase
 {
@@ -44,6 +45,45 @@ class ClientTest extends TestCase
         	$this->assertSame($client->path, $t['expect']['path'], $t['title']);
 
         	$this->assertNotNull($client->exporter, $t['title']);
+        }
+    }
+
+    public function testValidateSelf()
+    {
+        $tests = [
+        	[
+	        	'title' => 'success',
+	        	'init'  => function() {
+	        		$cnf = Config::new();
+	        		$client = Client::new($cnf);
+	        		return $client;
+	        	},
+	        	'error' => null,
+        	],
+        	[
+	        	'title' => 'error: invalid path',
+	        	'init'  => function() {
+	        		$cnf = Config::new();
+	        		$cnf->path = 'InvalidPath';
+	        		$client = Client::new($cnf);
+	        		return $client;
+	        	},
+	        	'error' => Exception::class,
+        	],
+        ];
+
+        foreach ($tests as $t) {
+        	if ($t['error'] !== null) {
+        		try {
+        			$client = $t['init']();
+        			$client->validateSelf();
+        		} catch (Exception $e) {
+        			$this->assertSame(Exception::class, $t['error']);
+        		}
+        	} else {
+        		$client = $t['init']();
+        		$this->assertNull($client->validateSelf(), $t['title']);
+        	}
         }
     }
 }
