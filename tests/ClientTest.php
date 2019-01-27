@@ -80,13 +80,57 @@ class ClientTest extends TestCase
         		} catch (Exception $e) {
         			$this->assertSame(Exception::class, $t['error']);
         		}
-        	} else {
-        		$client = $t['init']();
-        		$this->assertNull($client->validateSelf(), $t['title']);
+        		continue;
         	}
+
+      		$client = $t['init']();
+      		$this->assertNull($client->validateSelf(), $t['title']);
+        }
+    }
+
+    public function testSetExporter()
+    {
+        $tests = [
+        	[
+	        	'title'  => 'success json',
+	        	'input'  => 'Json',
+	        	'expect' => 'Uenoryo\Awsps\Exporter\Json',
+	        	'error'  => null,
+        	],
+        	[
+	        	'title'  => 'success plain',
+	        	'input'  => 'Plain',
+	        	'expect' => 'Uenoryo\Awsps\Exporter\Plain',
+	        	'error'  => null,
+        	],
+        	[
+	        	'title'  => 'success default',
+	        	'input'  => '',
+	        	'expect' => 'Uenoryo\Awsps\Exporter\Plain',
+	        	'error'  => null,
+        	],
+        	[
+	        	'title'  => 'error invalid exporter type',
+	        	'input'  => 'invalid type',
+	        	'expect' => null,
+	        	'error'  => Exception::class,
+        	],
+        ];
+
+        foreach ($tests as $t) {
+        	$client = Client::new(Config::new());
+
+        	if ($t['error'] !== null) {
+        		try {
+        			$client->setExporter($t['input']);
+        		} catch (Exception $e) {
+        			$this->assertSame(Exception::class, $t['error']);
+        		}
+        		continue;
+        	}
+
+        	$client->setExporter($t['input']);
+        	$this->assertSame(get_class($client->exporter), $t['expect'], $t['title']);
         }
     }
 }
-
-
-
