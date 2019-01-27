@@ -4,6 +4,7 @@ namespace Uenoryo\Awsps;
 
 require '../vendor/autoload.php';
 
+use Uenoryo\Awsps\Expoter\Plain;
 use Uenoryo\Awsps\Expoter\Json;
 use Aws\Ssm\SsmClient;
 use Exception;
@@ -94,6 +95,9 @@ class Client
     public function setExpoter(string $type)
     {
         switch (true) {
+            case $type === '' || $type === 'plain' || $type === 'Plain':
+                $this->expoter = new Plain;
+                break;
             case $type === 'json' || $type === 'Json':
                 $this->expoter = new Json;
                 break;
