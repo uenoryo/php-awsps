@@ -62,8 +62,9 @@ class Client
     {
         try {
             $response = $this->ssmClient->getParametersByPath([
-                'Path'      => $this->path,
-                'Recursive' => true,
+                'Path'           => $this->path,
+                'WithDecryption' => true,
+                'Recursive'      => true,
             ]);
             $paramsArray = $response->toArray()['Parameters'];
             $this->params = $this->newParamsFromArray($paramsArray);
