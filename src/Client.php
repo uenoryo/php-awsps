@@ -2,8 +2,8 @@
 
 namespace Uenoryo\Awsps;
 
-use Uenoryo\Awsps\Expoter\Plain;
-use Uenoryo\Awsps\Expoter\Json;
+use Uenoryo\Awsps\Exporter\Plain;
+use Uenoryo\Awsps\Exporter\Json;
 use Aws\Ssm\SsmClient;
 use Exception;
 
@@ -19,7 +19,7 @@ class Client
     public $params = [];
 
     /* @var エクスポータ */
-    public $expoter;
+    public $exporter;
 
     /**
      * $config を読み込み、 Client を初期化して返す.
@@ -37,7 +37,7 @@ class Client
         ]);
         $client->path = $config->path;
         $client->validateSelf();
-        $client->setExpoter($config->exportType);
+        $client->setExporter($config->exportType);
         return $client;
     }
 
@@ -80,7 +80,7 @@ class Client
      */
     public function export()
     {
-        return $this->expoter->export($this->params);
+        return $this->exporter->export($this->params);
     }
 
     /**
@@ -90,14 +90,14 @@ class Client
      *
      * @return Uenoryo\Awsps\Client
      */
-    public function setExpoter(string $type)
+    public function setExporter(string $type)
     {
         switch (true) {
             case $type === '' || $type === 'plain' || $type === 'Plain':
-                $this->expoter = new Plain;
+                $this->exporter = new Plain;
                 break;
             case $type === 'json' || $type === 'Json':
-                $this->expoter = new Json;
+                $this->exporter = new Json;
                 break;
             default:
                 throw new Exception("Invalid export type:'{$type}'");

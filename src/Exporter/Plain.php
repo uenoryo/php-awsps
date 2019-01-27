@@ -1,10 +1,10 @@
 <?php
 
-namespace Uenoryo\Awsps\Expoter;
+namespace Uenoryo\Awsps\Exporter;
 
-use Uenoryo\Awsps\Expoter;
+use Uenoryo\Awsps\Exporter;
 
-class Plain implements Expoter
+class Plain implements Exporter
 {
 	public function export($data)
 	{

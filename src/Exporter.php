@@ -2,7 +2,7 @@
 
 namespace Uenoryo\Awsps;
 
-interface Expoter
+interface Exporter
 {
 	public function export($data);
 }
