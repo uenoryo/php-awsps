@@ -141,9 +141,24 @@ class ClientTest extends TestCase
         	[
 	        	'title'  => 'success case',
 	        	'expect' => [
-	        		new Param,
-	        		new Param,
-	        		new Param,
+	        		[
+	        			'name'    => 'DUMMY1',
+	        			'value'   => 'dummy value 1',
+	        			'type'    => 'dummy type 1',
+	        			'version' => 'dummy version 1',
+	        		],
+	        		[
+	        			'name'    => 'DUMMY2',
+	        			'value'   => 'dummy value 2',
+	        			'type'    => 'dummy type 2',
+	        			'version' => 'dummy version 2',
+	        		],
+	        		[
+	        			'name'    => 'DUMMY3',
+	        			'value'   => 'dummy value 3',
+	        			'type'    => 'dummy type 3',
+	        			'version' => 'dummy version 3',
+	        		],
 	        	],
 	        	'error'  => null,
         	],
@@ -157,6 +172,13 @@ class ClientTest extends TestCase
         	$result = $client->params;
 
         	$this->assertSame(count($t['expect']), count($result), $t['title']);
+
+        	foreach ($result as $i => $res) {
+        		$this->assertSame($t['expect'][$i]['name'], $res->name, $t['title']);
+        		$this->assertSame($t['expect'][$i]['value'], $res->value, $t['title']);
+        		$this->assertSame($t['expect'][$i]['type'], $res->type, $t['title']);
+        		$this->assertSame($t['expect'][$i]['version'], $res->version, $t['title']);
+        	}
         }
     }
 }
@@ -176,22 +198,22 @@ class MockResponse
 		return [
 			'Parameters' => [
 				[
-					'Type'    => 'dummy type1',
-					'Value'   => 'dummy value1',
-					'Name'    => 'dummy Name1',
-					'Version' => 'dummy version1',
+					'Type'    => 'dummy type 1',
+					'Value'   => 'dummy value 1',
+					'Name'    => 'DUMMY1',
+					'Version' => 'dummy version 1',
 				],
 				[
-					'Type'    => 'dummy type2',
-					'Value'   => 'dummy value2',
-					'Name'    => 'dummy Name2',
-					'Version' => 'dummy version2',
+					'Type'    => 'dummy type 2',
+					'Value'   => 'dummy value 2',
+					'Name'    => '/DUMMY2',
+					'Version' => 'dummy version 2',
 				],
 				[
-					'Type'    => 'dummy type3',
-					'Value'   => 'dummy value3',
-					'Name'    => 'dummy Name3',
-					'Version' => 'dummy version3',
+					'Type'    => 'dummy type 3',
+					'Value'   => 'dummy value 3',
+					'Name'    => '/DUMMY/DUMMY3',
+					'Version' => 'dummy version 3',
 				],
 			],
 		];

@@ -118,7 +118,9 @@ class Client
             $name = $data['Name'] ?? '';
 
             // $name がパスである場合、末尾の名前だけを取得する
-            $name = ltrim(strrchr($name, '/'), '/');
+            if (strpos($name, '/') !== false) {
+                $name = ltrim(strrchr($name, '/'), '/');
+            }
 
             $param->name             = $name;
             $param->type             = $data['Type'] ?? '';
