@@ -5,6 +5,7 @@ namespace Uenoryo\Awsps\Test;
 use PHPUnit\Framework\TestCase;
 use Uenoryo\Awsps\Config;
 use Uenoryo\Awsps\Client;
+use Uenoryo\Awsps\Param;
 use Exception;
 
 class ClientTest extends TestCase
@@ -13,7 +14,7 @@ class ClientTest extends TestCase
     {
         $tests = [
         	[
-	        	'title' => 'success',
+	        	'title' => 'success case',
 	        	'input' => function() {
 	        		$cnf = Config::new();
 	        		$cnf->region     = 'test-region';
@@ -27,7 +28,7 @@ class ClientTest extends TestCase
 	        	],
         	],
         	[
-	        	'title' => 'success default config',
+	        	'title' => 'success case, default config',
 	        	'input' => function() {
 	        		return Config::new();
 	        	},
@@ -52,7 +53,7 @@ class ClientTest extends TestCase
     {
         $tests = [
         	[
-	        	'title' => 'success',
+	        	'title' => 'success case',
 	        	'init'  => function() {
 	        		$cnf = Config::new();
 	        		$client = Client::new($cnf);
@@ -61,7 +62,7 @@ class ClientTest extends TestCase
 	        	'error' => null,
         	],
         	[
-	        	'title' => 'error: invalid path',
+	        	'title' => 'error case, invalid path',
 	        	'init'  => function() {
 	        		$cnf = Config::new();
 	        		$cnf->path = 'InvalidPath';
@@ -92,25 +93,25 @@ class ClientTest extends TestCase
     {
         $tests = [
         	[
-	        	'title'  => 'success json',
+	        	'title'  => 'success case: json',
 	        	'input'  => 'Json',
 	        	'expect' => 'Uenoryo\Awsps\Exporter\Json',
 	        	'error'  => null,
         	],
         	[
-	        	'title'  => 'success plain',
+	        	'title'  => 'success case: plain',
 	        	'input'  => 'Plain',
 	        	'expect' => 'Uenoryo\Awsps\Exporter\Plain',
 	        	'error'  => null,
         	],
         	[
-	        	'title'  => 'success default',
+	        	'title'  => 'success case :default',
 	        	'input'  => '',
 	        	'expect' => 'Uenoryo\Awsps\Exporter\Plain',
 	        	'error'  => null,
         	],
         	[
-	        	'title'  => 'error invalid exporter type',
+	        	'title'  => 'error case, invalid exporter type',
 	        	'input'  => 'invalid type',
 	        	'expect' => null,
 	        	'error'  => Exception::class,
@@ -133,4 +134,66 @@ class ClientTest extends TestCase
         	$this->assertSame(get_class($client->exporter), $t['expect'], $t['title']);
         }
     }
+
+    public function testFetch()
+    {
+        $tests = [
+        	[
+	        	'title'  => 'success case',
+	        	'expect' => [
+	        		new Param,
+	        		new Param,
+	        		new Param,
+	        	],
+	        	'error'  => null,
+        	],
+        ];
+
+        foreach ($tests as $t) {
+        	$client = Client::new(Config::new());
+        	$client->ssmClient = new MockSsmClient;
+
+        	$client->fetch();
+        	$result = $client->params;
+
+        	$this->assertSame(count($result), count($t['expect']), $t['title']);
+        }
+    }
+}
+
+class MockSsmClient
+{
+	public function getParametersByPath()
+	{
+		return new MockResponse;
+	}
+}
+
+class MockResponse
+{
+	public function toArray()
+	{
+		return [
+			'Parameters' => [
+				[
+					'Type'    => 'dummy type1',
+					'Value'   => 'dummy value1',
+					'Name'    => 'dummy Name1',
+					'Version' => 'dummy version1',
+				],
+				[
+					'Type'    => 'dummy type2',
+					'Value'   => 'dummy value2',
+					'Name'    => 'dummy Name2',
+					'Version' => 'dummy version2',
+				],
+				[
+					'Type'    => 'dummy type3',
+					'Value'   => 'dummy value3',
+					'Name'    => 'dummy Name3',
+					'Version' => 'dummy version3',
+				],
+			],
+		];
+	}
 }
