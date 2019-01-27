@@ -4,6 +4,7 @@ namespace Uenoryo\Awsps;
 
 require '../vendor/autoload.php';
 
+use Uenoryo\Awsps\Expoter\Json;
 use Aws\Ssm\SsmClient;
 use Exception;
 
@@ -17,6 +18,9 @@ class Client
 
     /* @var パラメータ */
     public $params = [];
+
+    /* @var エクスポータ */
+    public $expoter;
 
     /**
      * $config を読み込み、 Client を初期化して返す.
@@ -34,6 +38,7 @@ class Client
         ]);
         $client->path = $config->path;
         $client->validateSelf();
+        $client->expoter = new Json;
         return $client;
     }
 
@@ -69,6 +74,11 @@ class Client
         return $this;
     }
 
+    public function export()
+    {
+        return $this->expoter->export($this->params);
+    }
+
     /**
      * AWSからのレスポンスから$paramsを初期化して返す.
      *
@@ -83,8 +93,8 @@ class Client
             $param->type             = $data['Type'] ?? '';
             $param->value            = $data['Value'] ?? '';
             $param->version          = $data['Version'] ?? '';
-            $param->lastModifiedDate = $data['lastModifiedDate'] ?? '';
-            $param->arn              = $data['Arn'] ?? '';
+            $param->lastModifiedDate = $data['LastModifiedDate'] ?? '';
+            $param->arn              = $data['ARN'] ?? '';
             $res[] = $param;
         }
         return $res;
