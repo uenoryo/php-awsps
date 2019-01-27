@@ -29,7 +29,7 @@ class PlainTest extends TestCase
 
 	        		return [$param1, $param2, $param3];
 	        	},
-	        	'expect' => "Dummy1=dummy1\nDummy2=dummy2\nDummy3=dummy3\n",
+	        	'expect' => "Dummy1=dummy1\n\nDummy2=dummy2\n\nDummy3=dummy3\n\n",
         	],
         ];
 
