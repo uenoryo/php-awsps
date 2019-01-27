@@ -10,6 +10,8 @@ use Uenoryo\Awsps\Config;
 use Uenoryo\Awsps\Client;
 
 $config = Config::new();
+$config->path = '/Uenoryo/Developmen';
+$config->exportType = 'json';
 $client = Client::new($config);
 
 $result = $client->fetch()->export();

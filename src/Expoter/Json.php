@@ -8,6 +8,10 @@ class Json implements Expoter
 {
 	public function export($data)
 	{
-		return json_encode($data);
+		$result = [];
+		foreach ($data as $r) {
+			$result[$r->name] = $r->value;
+		}
+		return json_encode($result);
 	}
 }
