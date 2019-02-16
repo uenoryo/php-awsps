@@ -48,7 +48,7 @@ print_r($result);
 
 /* [出力]
 *
-* HOMENAME=172.0.0.1
+* DATABASENAME=127.0.0.1
 *
 * USERNAME=root
 *
@@ -59,3 +59,12 @@ print_r($result);
 #### [3]
 
 .env に出力したりします (gitに入れたくない値などが共有できて便利)
+
+#### [4]
+
+コマンドでも実行可能です
+
+```sh
+$ ./vendor/bin/awsps --path /Test/Env --json
+{"DATABASENAME":"127.0.0.1","USERNAME":"root","PASSWORD":"12ab34CD"}
+```
