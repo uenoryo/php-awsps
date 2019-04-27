@@ -9,6 +9,9 @@ use Exception;
 
 class Client
 {
+    /* SSMへの最大リクエスト回数 */
+    const MAX_REQUEST_COUNT = 10;
+
     /* @var ssmClient */
     public $ssmClient;
 
@@ -55,19 +58,34 @@ class Client
 
     /**
      * パラメータを取得し、params にセットする.
+     * NOTE: 1リクエストで最大10件しか取得できない仕様なので MAX_REQUEST_COUNT 回まで連続でリクエストして取得する
      *
      * @return Uenoryo\Awsps\Client
      */
     public function fetch()
     {
         try {
-            $response = $this->ssmClient->getParametersByPath([
-                'Path'           => $this->path,
-                'WithDecryption' => true,
-                'Recursive'      => true,
-            ]);
-            $paramsArray = $response->toArray()['Parameters'];
-            $this->params = $this->newParamsFromArray($paramsArray);
+            // ページネーション用のトークン
+            $nextToken = null;
+
+            for ($i = 0; $i < self::MAX_REQUEST_COUNT; $i++) {
+                $response = $this->ssmClient->getParametersByPath([
+                    'Path'           => $this->path,
+                    'WithDecryption' => true,
+                    'Recursive'      => true,
+                    'NextToken'      => $nextToken,
+                ]);
+                $body = $response->toArray();
+                $paramsArray = $body['Parameters'];
+                array_push($this->params, ...$this->newParamsFromArray($paramsArray));
+
+                if (! isset($body['NextToken'])) {
+                    break;
+                }
+
+                $nextToken = $body['NextToken'];
+                sleep(0.5);
+            }
         } catch (Exception $e) {
             throw new Exception(sprintf('Fetch parameter failed, error: %s', $e->getMessage()));
         }
