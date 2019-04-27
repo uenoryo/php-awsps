@@ -10,7 +10,7 @@ use Exception;
 class Client
 {
     /* SSMへの最大リクエスト回数 */
-    const MAX_REQUEST_COUNT = 10;
+    const MAX_REQUEST_COUNT = 20;
 
     /* @var ssmClient */
     public $ssmClient;
