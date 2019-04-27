@@ -159,6 +159,24 @@ class ClientTest extends TestCase
 	        			'type'    => 'dummy type 3',
 	        			'version' => 'dummy version 3',
 	        		],
+                    [
+                        'name'    => 'DUMMY4',
+                        'value'   => 'dummy value 4',
+                        'type'    => 'dummy type 4',
+                        'version' => 'dummy version 4',
+                    ],
+                    [
+                        'name'    => 'DUMMY5',
+                        'value'   => 'dummy value 5',
+                        'type'    => 'dummy type 5',
+                        'version' => 'dummy version 5',
+                    ],
+                    [
+                        'name'    => 'DUMMY6',
+                        'value'   => 'dummy value 6',
+                        'type'    => 'dummy type 6',
+                        'version' => 'dummy version 6',
+                    ],
 	        	],
 	        	'error'  => null,
         	],
@@ -185,17 +203,24 @@ class ClientTest extends TestCase
 
 class MockSsmClient
 {
-	public function getParametersByPath()
+	public function getParametersByPath($input)
 	{
-		return new MockResponse;
+        switch ($input['NextToken']) {
+            case 'PAGE2_TOKEN':
+                return new MockResponsePage2;
+            case 'PAGE3_TOKEN':
+                return new MockResponsePage3;
+        }
+		return new MockResponsePage1;
 	}
 }
 
-class MockResponse
+class MockResponsePage1
 {
 	public function toArray()
 	{
 		return [
+            'NextToken'  => 'PAGE2_TOKEN',
 			'Parameters' => [
 				[
 					'Type'    => 'dummy type 1',
@@ -209,13 +234,54 @@ class MockResponse
 					'Name'    => '/DUMMY2',
 					'Version' => 'dummy version 2',
 				],
-				[
-					'Type'    => 'dummy type 3',
-					'Value'   => 'dummy value 3',
-					'Name'    => '/DUMMY/DUMMY3',
-					'Version' => 'dummy version 3',
-				],
 			],
 		];
 	}
+}
+
+class MockResponsePage2
+{
+    public function toArray()
+    {
+        return [
+            'NextToken'  => 'PAGE3_TOKEN',
+            'Parameters' => [
+                [
+                    'Type'    => 'dummy type 3',
+                    'Value'   => 'dummy value 3',
+                    'Name'    => 'DUMMY3',
+                    'Version' => 'dummy version 3',
+                ],
+                [
+                    'Type'    => 'dummy type 4',
+                    'Value'   => 'dummy value 4',
+                    'Name'    => '/DUMMY4',
+                    'Version' => 'dummy version 4',
+                ],
+            ],
+        ];
+    }
+}
+
+class MockResponsePage3
+{
+    public function toArray()
+    {
+        return [
+            'Parameters' => [
+                [
+                    'Type'    => 'dummy type 5',
+                    'Value'   => 'dummy value 5',
+                    'Name'    => 'DUMMY5',
+                    'Version' => 'dummy version 5',
+                ],
+                [
+                    'Type'    => 'dummy type 6',
+                    'Value'   => 'dummy value 6',
+                    'Name'    => '/DUMMY6',
+                    'Version' => 'dummy version 6',
+                ],
+            ],
+        ];
+    }
 }
