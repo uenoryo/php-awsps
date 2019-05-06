@@ -1,6 +1,11 @@
 #!/usr/bin/php
 <?php
 
-include_once __DIR__.'/../../../autoload.php';
+foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../autoload.php'] as $file) {
+    if (file_exists($file)) {
+        include_once $file;
+        break;
+    }
+}
 
 \Uenoryo\Awsps\Command::exec($argv);
