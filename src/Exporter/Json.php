@@ -6,7 +6,7 @@ use Uenoryo\Awsps\Exporter;
 
 class Json implements Exporter
 {
-	public $noEscape = false;
+	public $escapeSlush = false;
 
 	public function export($data)
 	{
@@ -15,13 +15,10 @@ class Json implements Exporter
 			$result[$r->name] = $r->value;
 		}
 
-		$options = [];
-		if ($this->noEscape) {
-			$options = [
-				JSON_UNESCAPED_SLASHES,
-				JSON_UNESCAPED_UNICODE,
-			];
+		$option = null;
+		if (! $this->escapeSlush) {
+			$option = JSON_UNESCAPED_SLASHES;
 		}
-		return json_encode($result, $options);
+		return json_encode($result, $option);
 	}
 }
