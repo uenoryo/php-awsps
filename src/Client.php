@@ -40,7 +40,7 @@ class Client
         ]);
         $client->path = $config->path;
         $client->validateSelf();
-        $client->setExporter($config->exportType);
+        $client->setExporter($config->exportType, $config->escapeSlush);
         return $client;
     }
 
@@ -109,7 +109,7 @@ class Client
      *
      * @return Uenoryo\Awsps\Client
      */
-    public function setExporter(string $type)
+    public function setExporter(string $type, ?bool $escapeSlush = false)
     {
         switch (true) {
             case $type === '' || $type === 'plain' || $type === 'Plain':
@@ -117,6 +117,9 @@ class Client
                 break;
             case $type === 'json' || $type === 'Json':
                 $this->exporter = new Json;
+                if ($escapeSlush) {
+                    $this->exporter->escapeSlush = true;
+                }
                 break;
             default:
                 throw new Exception("Invalid export type:'{$type}'");

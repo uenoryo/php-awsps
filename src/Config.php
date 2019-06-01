@@ -16,6 +16,9 @@ class Config
     /* @var export type */
     public $exportType = '';
 
+    /* @var escape slush when encode to json */
+    public $escapeSlush = false;
+
     public static function new()
     {
         return new Self;

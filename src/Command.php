@@ -28,10 +28,18 @@ class Command
         $config->path = $args[2];
         if (isset($args[3])) {
             if ($args[3] !== '--json') {
-                echo "Error: $msg run [awsps --help] for more information.".PHP_EOL;
+                echo "Error: invalid option. run [awsps --help] for more information.".PHP_EOL;
                 die();
             }
             $config->exportType = 'json';
+
+            if (isset($args[4])) {
+                if ($args[4] !== '--escape-slush') {
+                    echo "Error: invalid option. run [awsps --help] for more information.".PHP_EOL;
+                    die();
+                }
+                $config->escapeSlush = true;
+            }
         }
 
         $client = Client::new($config);
@@ -45,6 +53,7 @@ class Command
         echo 'Usage: awsps [options...]'.PHP_EOL.PHP_EOL;
         echo '--help            Show this help'.PHP_EOL;
         echo '--json            Export JSON format'.PHP_EOL;
+        echo '--escape-slush    Escape slush when export JSON format'.PHP_EOL;
         echo '--path <path>     Target path of AWS Parameter store'.PHP_EOL.PHP_EOL;
     }
 }
