@@ -109,7 +109,7 @@ class Client
      *
      * @return Uenoryo\Awsps\Client
      */
-    public function setExporter(string $type, bool $escapeSlush = false)
+    public function setExporter(string $type, ?bool $escapeSlush = false)
     {
         switch (true) {
             case $type === '' || $type === 'plain' || $type === 'Plain':

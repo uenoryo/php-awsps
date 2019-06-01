@@ -93,28 +93,38 @@ class ClientTest extends TestCase
     {
         $tests = [
         	[
-	        	'title'  => 'success case: json',
-	        	'input'  => 'Json',
-	        	'expect' => 'Uenoryo\Awsps\Exporter\Json',
-	        	'error'  => null,
+	        	'title'        => 'success case: json, no escape slush',
+	        	'input'        => 'Json',
+                'escape_slush' => false,
+	        	'expect'       => 'Uenoryo\Awsps\Exporter\Json',
+	        	'error'        => null,
+        	],
+            [
+                'title'        => 'success case: json, escape slush',
+                'input'        => 'Json',
+                'escape_slush' => true,
+                'expect'       => 'Uenoryo\Awsps\Exporter\Json',
+                'error'        => null,
+            ],
+        	[
+	        	'title'       => 'success case: plain',
+	        	'input'       => 'Plain',
+	        	'expect'      => 'Uenoryo\Awsps\Exporter\Plain',
+	        	'error'       => null,
         	],
         	[
-	        	'title'  => 'success case: plain',
-	        	'input'  => 'Plain',
-	        	'expect' => 'Uenoryo\Awsps\Exporter\Plain',
-	        	'error'  => null,
+	        	'title'        => 'success case :default',
+	        	'input'        => '',
+                'escape_slush' => false,
+	        	'expect'       => 'Uenoryo\Awsps\Exporter\Plain',
+	        	'error'        => null,
         	],
         	[
-	        	'title'  => 'success case :default',
-	        	'input'  => '',
-	        	'expect' => 'Uenoryo\Awsps\Exporter\Plain',
-	        	'error'  => null,
-        	],
-        	[
-	        	'title'  => 'error case, invalid exporter type',
-	        	'input'  => 'invalid type',
-	        	'expect' => null,
-	        	'error'  => Exception::class,
+	        	'title'        => 'error case, invalid exporter type',
+	        	'input'        => 'invalid type',
+                'escape_slush' => false,
+	        	'expect'       => null,
+	        	'error'        => Exception::class,
         	],
         ];
 
@@ -130,8 +140,12 @@ class ClientTest extends TestCase
         		continue;
         	}
 
-        	$client->setExporter($t['input']);
+        	$client->setExporter($t['input'], $t['escape_slush'] ?? null);
         	$this->assertSame($t['expect'], get_class($client->exporter), $t['title']);
+
+            if ($t['input'] === 'Json') {
+                $this->assertSame($t['escape_slush'], $client->exporter->escapeSlush, $t['title']);
+            }
         }
     }
 
